@@ -80,7 +80,7 @@ abricate --nopath --summary ARG_dir/*tab > ARG.tab
 ```
 
 ## 10. Core SNP Phylogenetic analysis
-### Snippy
+### Snippy, Gubbins, RAxML
 ```bash
 # call SNPs for multiple isolates from the same reference KP16932.
 snippy-multi input.tab --ref KP16932.fa  --cpu 24  > runme.sh
