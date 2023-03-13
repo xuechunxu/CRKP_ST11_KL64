@@ -143,6 +143,7 @@ plot(obj,legend=0.7*max(nodeHeights(tree)),
 ## 12. Plasmid coverage across isolates
 ### Blastn, Seqkit
 ```bash
+# coverage_calculation.py can be found in In-house_script dictionary.
 # Blastn each genome to plasmid sequence
 makeblastdb -in plasmid.fasta -dbtype nucl -parse_seqids -out plasmid_db
 mkdir blastn_result
@@ -151,6 +152,6 @@ for i in fasta_dir/*.fasta; do blastn -query $i -db plasmid_db -out blastn_resul
 # calculate coverage
 seqkit fx2tab --length --name --header-line plasmid.fasta # calculate the length of plasmid
 cd blastn_result
-for i in *.out; do python /home/xuechunxu/pipeline/coverage.py -i $i -l <plasmid length>; done > ../coverage_result.tab
+for i in *.out; do python coverage_calculation.py -i $i -l <plasmid length>; done > ../coverage_result.tab
 # -l, length of plasmid
 ```
