@@ -109,23 +109,32 @@ raxmlHPC -f a -x 12345 -p 12345 -# 100 -m GTRGAMMAX -s clean.core.aln -n tree
 ## 11. Ancestral state reconstruction of mobile genetic element (MGE) number
 ### Phytools, R
 ```R
+# core_SNP.tre and mge_count.csv can be found in `MGE_ancestral_state` dictionary,
+# selected replicon as example
 setwd("path/work_dictionary")
 library(phytools)
+
 tree <- read.tree("core_SNP.tre")
 #the phylogenetic tree built in 10 above.
-mge <- read.csv("mge_count.csv",row.names=1) #leaves的状态
-mge<-as.matrix(mge)[,1] #选择第一列，第二列就[,2]
+
+mge <- read.csv("mge_count.csv",row.names=1) # input MGE number of each isolates.
+mge<-as.matrix(mge)[,1] # selected replicon as example
+
+# estimate ancestral states and compute variances & 95% confidence intervals for each node:
 fit<-fastAnc(tree,mge,vars=TRUE,CI=TRUE)
+fit
+
+# projection of the reconstruction onto the edges of the tree
 obj<-contMap(tree,mge,plot=FALSE)
 plot(obj,legend=0.7*max(nodeHeights(tree)),
-     fsize=c(0.1,0.9), lwd=1, outline = F, leg.txt="replicons",ftype="off")
+     fsize=c(0.1,0.9), lwd=1, outline = F, leg.txt="Replicons",ftype="off")
+# fsize, set font size
+# outline, logical value indicated whether or not to outline the plotted color bar with a 1 pt
+line.
+# leg.txt, set title of legend.
+# ftype="off", don't show leave's name.
 
-#fsize设置字体大小，第一个是leaves的大小，第二个是legend的大小
-#outline #是指树分支是否有黑色边框， =F就是没有
-#leg.txt设置legend的标题
-#ftype是指是否保留leaves的label， =F就是不保留菌株名字
-
-#注意，自己设置颜色
+# OR set color manually
 obj<-setMap(obj,c("red", "#fffc00", "green", "purple", "blue", "#d7ff00", "black"))
 plot(obj,legend=0.7*max(nodeHeights(tree)),
      fsize=c(0.1,0.9), lwd=1, outline = F, leg.txt="replicons",ftype="off")
