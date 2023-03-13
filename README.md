@@ -134,8 +134,23 @@ line.
 # leg.txt, set title of legend.
 # ftype="off", don't show leave's name.
 
-# OR set color manually
+# OR set colors manually
 obj<-setMap(obj,c("red", "#fffc00", "green", "purple", "blue", "#d7ff00", "black"))
 plot(obj,legend=0.7*max(nodeHeights(tree)),
      fsize=c(0.1,0.9), lwd=1, outline = F, leg.txt="replicons",ftype="off")
+```
+
+## 12. Plasmid coverage across isolates
+### Blastn, Seqkit
+```bash
+# Blastn each genome to plasmid sequence
+makeblastdb -in plasmid.fasta -dbtype nucl -parse_seqids -out plasmid_db
+mkdir blastn_result
+for i in fasta_dir/*.fasta; do blastn -query $i -db plasmid_db -out blastn_result/${i##*/}.blastn.out -outfmt 6; done
+
+# calculate coverage
+seqkit fx2tab --length --name --header-line plasmid.fasta # calculate the length of plasmid
+cd blastn_result
+for i in *.out; do python /home/xuechunxu/pipeline/coverage.py -i $i -l <plasmid length>; done > ../coverage_result.tab
+# -l, length of plasmid
 ```
