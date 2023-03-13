@@ -79,3 +79,29 @@ abricate --nopath --summary ARG_dir/*tab > ARG.tab
 # fasta_dir, the input directory containing a set of genomic assembly sequences.
 ```
 
+## 10. Core SNP Phylogenetic analysis
+### Snippy
+```bash
+# call SNPs for multiple isolates from the same reference KP16932.
+snippy-multi input.tab --ref KP16932.fa  --cpu 24  > runme.sh
+# input.tab, a tab separated input file as follows
+# input.tab = ID assembly.fasta
+# Isolate	/path/to/contigs.fasta
+less runme.sh   # check the script makes sense
+sh ./runme.sh   # leave it running over lunch
+
+# remove all the "weird" characters and replace them with N
+snippy-clean_full_aln core.full.aln > clean.full.aln 
+
+### Gubbins
+# detect recombination region
+run_gubbins.py -f 50 -p gubbins clean.full.aln
+
+# remove recombination region
+snp-sites -c gubbins.filtered_polymorphic_sites.fasta > clean.core.aln
+# -c only output columns containing exclusively ACGT
+
+### RAxML
+# build core SNP tree
+raxmlHPC -f a -x 12345 -p 12345 -# 100 -m GTRGAMMAX -s clean.core.aln -n tree
+```
