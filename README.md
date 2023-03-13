@@ -60,7 +60,7 @@ fastANI --ql quer_genome.list --rl ref_genome.list -o FastANI.out -t 40
 ## 7. Genome annotation
 ### Prokka
 ```bash
-fastANI --ql quer_genome.list --rl ref_genome.list -o FastANI.out -t 40
+prokka KP16932.fasta --prefix KP16932 --outdir KP16932.prokka.out/KP16932 --compliant
 ```
 
 ## 8. ST assignment
@@ -69,3 +69,13 @@ fastANI --ql quer_genome.list --rl ref_genome.list -o FastANI.out -t 40
 kleborate --all -o kleborate.results.txt -a fasta_dir/*.fasta
 # fasta_dir, the input directory containing a set of genomic assembly sequences.
 ```
+
+## 9. Identification of ARGs,
+### Abricate
+```bash
+mkdir ARG_dir
+for f in `ls fasta_dir`; do abricate -db resfinder --nopath --minid 50 --mincov 70 --quiet fasta_dir/${f} > ARG_dir/${f%%.fasta}.tab; done
+abricate --nopath --summary ARG_dir/*tab > ARG.tab
+# fasta_dir, the input directory containing a set of genomic assembly sequences.
+```
+
