@@ -29,7 +29,7 @@ The links below the sub-headings lead to the scripts needed for the correspondin
 All assembled Illumina sequence data have been deposited in GenBank under the BioProject accession number [PRJNA778807](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA778807).
 
 ## 3. read trimming
-### SPAdes
+### Trimmomatic
 ```bash
 java -jar trimmomatic-0.36.jar PE -threads 5 KP16932_raw_1.fq.gz KP16932_raw_2.fq.gz KP16932_clean_1.fq.gz KP16932__unpaired_1.fq.gz KP16932_clean_2.fq.gz KP16932__unpaired_2.fq.gz
 ```
@@ -104,4 +104,29 @@ snp-sites -c gubbins.filtered_polymorphic_sites.fasta > clean.core.aln
 ### RAxML
 # build core SNP tree
 raxmlHPC -f a -x 12345 -p 12345 -# 100 -m GTRGAMMAX -s clean.core.aln -n tree
+```
+
+## 11. Ancestral state reconstruction of mobile genetic element (MGE) number
+### Phytools, R
+```R
+setwd("path/work_dictionary")
+library(phytools)
+tree <- read.tree("core_SNP.tre")
+#the phylogenetic tree built in 10 above.
+mge <- read.csv("mge_count.csv",row.names=1) #leaves的状态
+mge<-as.matrix(mge)[,1] #选择第一列，第二列就[,2]
+fit<-fastAnc(tree,mge,vars=TRUE,CI=TRUE)
+obj<-contMap(tree,mge,plot=FALSE)
+plot(obj,legend=0.7*max(nodeHeights(tree)),
+     fsize=c(0.1,0.9), lwd=1, outline = F, leg.txt="replicons",ftype="off")
+
+#fsize设置字体大小，第一个是leaves的大小，第二个是legend的大小
+#outline #是指树分支是否有黑色边框， =F就是没有
+#leg.txt设置legend的标题
+#ftype是指是否保留leaves的label， =F就是不保留菌株名字
+
+#注意，自己设置颜色
+obj<-setMap(obj,c("red", "#fffc00", "green", "purple", "blue", "#d7ff00", "black"))
+plot(obj,legend=0.7*max(nodeHeights(tree)),
+     fsize=c(0.1,0.9), lwd=1, outline = F, leg.txt="replicons",ftype="off")
 ```
