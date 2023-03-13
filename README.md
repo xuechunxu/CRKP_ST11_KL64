@@ -143,7 +143,7 @@ plot(obj,legend=0.7*max(nodeHeights(tree)),
 ## 12. Plasmid coverage across isolates
 ### Blastn, Seqkit
 ```bash
-# coverage_calculation.py can be found in In-house_script dictionary.
+# coverage_calculation.py can be found in `In-house_script` dictionary.
 # Blastn each genome to plasmid sequence
 makeblastdb -in plasmid.fasta -dbtype nucl -parse_seqids -out plasmid_db
 mkdir blastn_result
@@ -159,10 +159,58 @@ for i in *.out; do python coverage_calculation.py -i $i -l <plasmid length>; don
 ## 13. Genotype
 ### ComplexUpset
 ```R
-# KL64_gene_matrix.tab can be found in Genotype dictionary.
+# KL64_gene_matrix.tab can be found in `Genotype` dictionary.
 library(ggplot2)
 library(ComplexUpset)
 KL64 <- read.table("KL64_gene_matrix.tab",header=T, row.names=1)
 matrix <- colnames(KL64)[3:13]
 upset(KL64, matrix,min_size=0,base_annotations = list("intersection size" = intersection_size(counts = F,mapping = aes(fill=Year))))
+```
+
+## 14. Transmission analysis
+### regentrans
+```R
+# metadata.csv, clean.core.aln and clean.core.tree can be downloaded from `Transmission_analysis` dictionary.
+library(regentrans)
+library(ape)
+library(tidyverse)
+library(devtools)
+library(ggtree)
+library(pheatmap)
+library(phytools)
+library(gridExtra)
+library(cowplot)
+# set theme for plots 
+theme_set(theme_bw() + theme(strip.background = element_rect(fill="white",linetype='blank'), text=element_text(size=15)))
+
+# this is if your metadata is in a csv file
+metadata <- readr::read_csv("metadata.csv")
+# this is if your alignment is in a fasta file
+aln <- ape::read.dna("clean.core.aln", format = "fasta")
+# this is if the tree is in Newick format
+tr <- ape::read.tree("clean.core.tree")
+
+# Pairwise SNV distance matrix
+dists <- ape::dist.dna(x = aln, # DNAbin object as read in above
+                       as.matrix = TRUE, # return as matrix
+                       model = "N", # count pairwise distances
+                       pairwise.deletion = TRUE # delete sites with missing data in a pairwise way
+                       )
+                       
+# Extracting location and patients as a vectors
+# named vector of locations
+locs <- metadata%>%select(isolate_id, facility)%>%deframe()
+head(locs)
+# named vector of patients
+pt <- metadata%>%select(isolate_id, patient_id)%>%deframe()
+head(pt)
+
+# Visualizing intra-facility pair fraction distribution with help from get_frac_intra()
+# get pair types for pairwise SNV distances (intra vs. inter)
+pair_types <- get_pair_types(dists = dists, locs = locs, pt = pt)
+# get fraction of intra-facility pairs for each SNV distance
+frac_intra <- get_frac_intra(pair_types = pair_types)
+# write out the the fraction of intra-facility pairs for different SNV distances,
+#our results were produced from this table
+write.csv( frac_intra, file = "frac_intra.csv")
 ```
