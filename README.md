@@ -155,3 +155,14 @@ cd blastn_result
 for i in *.out; do python coverage_calculation.py -i $i -l <plasmid length>; done > ../coverage_result.tab
 # -l, length of plasmid
 ```
+
+## 13. Genotype
+### ComplexUpset
+```R
+# KL64_gene_matrix.tab can be found in Genotype dictionary.
+library(ggplot2)
+library(ComplexUpset)
+KL64 <- read.table("KL64_gene_matrix.tab",header=T, row.names=1)
+matrix <- colnames(KL64)[3:13]
+upset(KL64, matrix,min_size=0,base_annotations = list("intersection size" = intersection_size(counts = F,mapping = aes(fill=Year))))
+```
