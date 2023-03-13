@@ -37,7 +37,7 @@ java -jar trimmomatic-0.36.jar PE -threads 5 KP16932_raw_1.fq.gz KP16932_raw_2.f
 ## 4. Assembly
 ### SPAdes
 ```bash
-spades.py -1 KP16932_clean_1.fq.gz -2 KP16932_clean_2.fq.gz --isolate --cov-cutoff auto -o KP16932.spades.out
+spades.py -1 KP16932_clean_1.fq.gz -2 KP16932_clean_2.fq.gz --isolate --cov-cutoff auto -o KP16932.fasta
 ```
 ### Unicycle
 ```bash
@@ -45,9 +45,27 @@ unicycler -1 KP16932_1.clean_1.fq.gz -2 KP16932_2.clean_1.fq.gz -l KP16932.nanop
 ```
 
 ## 5. Taxonomy assignment
+### GTDB
 ```bash
 nohup gtdbtk classify_wf --genome_dir fasta_dir/ --out_dir fasta_dir.GTDB.out --extension fasta &
 # fasta_dir, the input directory containing a set of genomic assembly sequences.
 # fasta_dir.GTDB.out, output directory
 ```
-## 6. Amino acid identity (ANI)
+## 6. Amino acid identity (ANI) calculation
+### fastANI
+```bash
+fastANI --ql quer_genome.list --rl ref_genome.list -o FastANI.out -t 40
+```
+
+## 7. Genome annotation
+### Prokka
+```bash
+fastANI --ql quer_genome.list --rl ref_genome.list -o FastANI.out -t 40
+```
+
+## 8. ST assignment
+### Kleborate
+```bash
+kleborate --all -o kleborate.results.txt -a fasta_dir/*.fasta
+# fasta_dir, the input directory containing a set of genomic assembly sequences.
+```
