@@ -13,6 +13,7 @@ The links below the sub-headings lead to the scripts needed for the correspondin
 - [Python3](https://www.python.org/)
 - [Trimmomatic](https://github.com/timflutre/trimmomatic)
 - [SPAdes](https://github.com/ablab/spades)
+- [Unicycle](https://github.com/rrwick/Unicycler)
 - [Prokka](https://github.com/tseemann/prokka)
 - [Prodigal](https://github.com/hyattpd/Prodigal)
 - [HMMER](http://hmmer.org/)
@@ -22,6 +23,17 @@ The links below the sub-headings lead to the scripts needed for the correspondin
 - [Numpy](https://numpy.org/)
 - [CheckM](https://ecogenomics.github.io/CheckM/)
 - [GTDB-Tk](https://github.com/Ecogenomics/GTDBTk)
+- [fastANI](https://github.com/ParBLiSS/FastANI)
+- [Kleborate](https://github.com/katholt/Kleborate)
+- [Abricate](https://github.com/tseemann/abricate)
+- [Resfinder](https://github.com/cadms/resfinder)
+- [Snippy](https://github.com/tseemann/snippy)
+- [Gubbins](https://github.com/nickjcroucher/gubbins)
+- [Phytools](https://cran.r-project.org/web/packages/phytools/index.html)
+- [Seqkit](https://bioinf.shenwei.me/seqkit/)
+- [ComplexUpset](https://krassowski.github.io/complex-upset/index.html)
+- [regentrans](https://github.com/Snitkin-Lab-Umich/regentrans)
+- [BEAST](https://beast.community/)
 
 >Take the KP16932 isolate as an example.
 
